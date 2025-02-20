@@ -5,7 +5,7 @@ def udp_client(host='127.0.0.1', port=5005):
     # Accepts user input for payload size in megabytes, converts to bytes
     payload_size_str = input("Enter number of MBs to send: ").strip()
     payload_size_bytes = (1024 * 1024 * int(payload_size_str))
-
+    print(f"Size in bytes: {payload_size_bytes}\nSize: {int(payload_size_str)}")
     # Creates specified number of bytes filled with "x" for testing
     payload = b"x" * payload_size_bytes 
 
@@ -27,7 +27,8 @@ def udp_client(host='127.0.0.1', port=5005):
 
             # Initializes variable for when payload begins sending
             send_start_time = None
-            
+            print("Before sending")
+            check = 0
             # While any of payload is unsent, iterates through payload, sending chunks
             while payload_sent < payload_size_bytes:
                 # If send time has not yet been specified, sends start transmission time to server for throughput calculation
@@ -36,15 +37,16 @@ def udp_client(host='127.0.0.1', port=5005):
                     client_socket.send(str(send_start_time).encode())
                 end_index = min(payload_sent + packet_size, payload_size_bytes)
                 client_socket.send(payload[payload_sent:end_index])
+                print(f"Check: {check}")
+                check+=1
                 payload_sent = end_index
-
+            print("Done")
             # Receives throughput data from server and prints it
             data = client_socket.recv(1024)
             received_info = client_socket.recv(1024)
             print(f"Throughput: {data.decode()} KBps")
             print(f"{payload_size_bytes} bytes were sent at {send_start_time} seconds from epoch")
             print(f"{received_info.decode()}")
-
         except socket.timeout:
             print("Socket timed out waiting for data")
 
