@@ -19,6 +19,7 @@ def start(host='127.0.0.1', port=7000):
             data = client_socket.recv(1024).decode()
             print(f"Received data: {data}")
 
+            # Create response message
             response_message = "pong"
 
             # Send the response back to the proxy server
