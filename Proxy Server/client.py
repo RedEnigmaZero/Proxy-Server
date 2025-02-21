@@ -27,7 +27,7 @@ def send_message(server_ip='127.0.0.1', server_port=7000, proxy_ip='127.0.0.1', 
         # Close the connection
         client_socket.close()
     except socket.timeout:
-        print("Client Time out")
+        print("Client Timeout")
 
 if __name__ == "__main__":
     send_message()
