@@ -20,7 +20,11 @@ def start(host='127.0.0.1', port=7000):
             print(f"Received data: {data}")
 
             # Create response message
-            response_message = "pong"
+            message = json.loads(data)["message"]
+            if message == "pong":
+                response_message = "ping"
+            else:
+                response_message = "pong"
 
             # Send the response back to the proxy server
             response = json.dumps({"message": response_message})
