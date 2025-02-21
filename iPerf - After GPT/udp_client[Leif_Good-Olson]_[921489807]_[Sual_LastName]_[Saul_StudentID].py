@@ -11,7 +11,7 @@ def udp_client(host='127.0.0.1', port=5005):
 
     # Creates connection and sends payload, closes connection when done
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client_socket:
-        client_socket.settimeout(15)  # Set a 15-second timeout
+        client_socket.settimeout(31)  # Set a 15-second timeout
         client_socket.connect((host, port)) # Connects to server with host/port IP
         local_ip, local_port = client_socket.getsockname() # Gets IP of client
 
@@ -19,6 +19,7 @@ def udp_client(host='127.0.0.1', port=5005):
         print(f"Server address is {host}:{port}") # Prints IP of server
         
         try:
+            print(f"payload size: {int(payload_size_str) * 1024 * 1024}")
             client_socket.send(payload_size_str.encode()) # Sends payload size so server knows how much data to expect
 
             # Initializes variables for payload that has been sent and amount of data we will send at once
@@ -28,17 +29,15 @@ def udp_client(host='127.0.0.1', port=5005):
             # Initializes variable for when payload begins sending
             send_start_time = None
             print("Before sending")
-            check = 0
             # While any of payload is unsent, iterates through payload, sending chunks
             while payload_sent < payload_size_bytes:
                 # If send time has not yet been specified, sends start transmission time to server for throughput calculation
                 if send_start_time is None: 
                     send_start_time = time.time()
+                    print(f"start time: {send_start_time}")
                     client_socket.send(str(send_start_time).encode())
                 end_index = min(payload_sent + packet_size, payload_size_bytes)
                 client_socket.send(payload[payload_sent:end_index])
-                print(f"Check: {check}")
-                check+=1
                 payload_sent = end_index
             print("Done")
             # Receives throughput data from server and prints it
