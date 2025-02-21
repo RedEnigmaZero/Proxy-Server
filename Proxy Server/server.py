@@ -28,9 +28,10 @@ def start(host='127.0.0.1', port=7000):
 
             # Close the connection
             client_socket.close()
-            break
+            #break
         except socket.timeout:
             print("Server Timeout")
+            server_socket.close()
             break
 
 if __name__ == "__main__":
